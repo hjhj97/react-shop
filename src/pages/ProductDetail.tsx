@@ -19,16 +19,16 @@ const ProductDetailWrapper = styled.div`
 const ImageWrapper = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   overflow: hidden;
-  width: 100%;
-  height: calc(100% - 2rem);
+  /*width: 100%;*/
+  width: 45%;
+  /*height: 50%;*/
   max-width: 500px;
 `;
 const ProductImage = styled.img`
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 `;
 const ProductInfoWrapper = styled.div`
   display: flex;
@@ -38,23 +38,33 @@ const ProductInfoWrapper = styled.div`
 `;
 
 const ProductTitle = styled.div`
-  font-size: 5rem;
-`;
-const ProductPrice = styled.div`
   font-size: 3rem;
 `;
+const ProductPrice = styled.div`
+  font-size: 2rem;
+`;
 const ProductDescription = styled.div`
-  font-size: 1.2rem;
+  font-size: 1rem;
 `;
 
 const CartWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  border: 1px solid black;
+  gap: 1rem;
+  /*padding: 2rem 0;*/
+
+  /*border: 1px solid black;*/
   height: 30%;
 `;
 const AmountWrapper = styled.div`
   height: calc(100% / 2);
+  width: 100%;
+  /*margin: 0 auto;*/
+  & div {
+    display: flex;
+    width: 50%;
+    justify-content: space-between;
+  }
 `;
 const PriceWrapper = styled.div`
   height: calc(100% / 2);
@@ -91,6 +101,11 @@ function ProductDetail() {
   const getTotalPrice = () => {
     return amount * productDetail?.price || 1;
   };
+
+  const onClickCart = () => {
+    console.log("cart");
+  };
+  const onClickBuy = () => {};
   const totalPrice = useMemo(getTotalPrice, [amount, productDetail?.price]);
 
   return (
@@ -115,17 +130,17 @@ function ProductDetail() {
               </ProductDescription>
               <CartWrapper>
                 <AmountWrapper>
-                  수량선택 {amount}
                   <div>
-                    <button onClick={() => setAmount((prev) => prev + 1)}>+</button>
                     <button onClick={() => setAmount((prev) => prev - 1)}>-</button>
+                    {amount}
+                    <button onClick={() => setAmount((prev) => prev + 1)}>+</button>
                   </div>
                 </AmountWrapper>
-                <PriceWrapper>총가격:{totalPrice}</PriceWrapper>
+                <PriceWrapper>총가격:${totalPrice}</PriceWrapper>
               </CartWrapper>
               <ButtonWrapper>
-                <Button>장바구니</Button>
-                <Button>구매하기</Button>
+                <Button onClick={onClickCart}>장바구니</Button>
+                <Button onClick={onClickBuy}>구매하기</Button>
               </ButtonWrapper>
             </ProductInfoWrapper>
           </ProductDetailWrapper>

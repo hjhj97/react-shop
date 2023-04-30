@@ -2,11 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-const ProductItemWrapper = styled.li`
+const ProductItemWrapper = styled(Link)`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
   border: 1px solid black;
   padding: 0.5rem;
   border-radius: 1rem;
-  height: 10rem;
+  height: 400px;
 
   width: calc((100% - 4rem) / 2);
   &:hover {
@@ -23,21 +26,32 @@ const ProductImageWrapper = styled.div`
   align-items: center;
   overflow: hidden;
   width: 100%;
-  height: calc(100% - 2rem);
+  /*height: 300px;*/
+  height: 80%;
 `;
 const ProductImage = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 `;
+
+const ProductSummaryWrapper = styled.div``;
 
 function ProductItem({ product }: any) {
   return (
-    <ProductItemWrapper>
+    <ProductItemWrapper to={`/product/${product.id}`}>
       <ProductImageWrapper>
         <ProductImage src={product.image} />
       </ProductImageWrapper>
-      <Link to={`/product/${product.id}`}>{product.title}</Link>
+      <ProductSummaryWrapper>
+        <p>{product.title}</p>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <p>${product.price}</p>
+          <p>
+            ★{product.rating.rate}&nbsp;({product.rating.count})
+          </p>
+        </div>
+      </ProductSummaryWrapper>
     </ProductItemWrapper>
   );
 }
