@@ -35,6 +35,7 @@ function Header() {
         About
       </NavLink>
       <Link to="/product_list">List</Link>
+      <Link to="/cart">Cart</Link>
     </NavWrapper>
   );
 }

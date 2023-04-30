@@ -3,6 +3,8 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { getProductDetail } from "../api/product";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { cartState } from "../state/atoms";
 
 const ProductContainer = styled.div`
   display: flex;
@@ -94,16 +96,19 @@ const Button = styled.button`
 
 function ProductDetail() {
   const { product_id } = useParams();
+  const [cart, setCart] = useRecoilState(cartState);
   const { data: productDetail, isLoading } = useQuery<any>(["detail", product_id], () => getProductDetail(product_id));
   const [amount, setAmount] = useState(1);
-  //const [totalPrice, setTotalPrice] = useState(productDetail?.price);
 
   const getTotalPrice = () => {
     return amount * productDetail?.price || 1;
   };
 
   const onClickCart = () => {
-    console.log("cart");
+    setCart((prev: any[]) => {
+      return [...prev, productDetail] as any;
+    });
+    alert("Item added.");
   };
   const onClickBuy = () => {};
   const totalPrice = useMemo(getTotalPrice, [amount, productDetail?.price]);
