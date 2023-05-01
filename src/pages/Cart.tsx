@@ -9,6 +9,7 @@ const Container = styled.div`
   max-width: 800px;
   padding: 2rem 0;
   margin: 0 auto;
+  background-color: ;
 `;
 
 const CartContainer = styled.div`

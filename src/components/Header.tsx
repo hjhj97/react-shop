@@ -36,6 +36,7 @@ function Header() {
       </NavLink>
       <Link to="/product_list">List</Link>
       <Link to="/cart">Cart</Link>
+      <Link to="/login">Login</Link>
     </NavWrapper>
   );
 }
