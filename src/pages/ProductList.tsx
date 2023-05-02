@@ -1,15 +1,20 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { getProductList } from "../api/product";
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import ProductItem from "../components/ProductItem";
+import { debounce } from "lodash";
 
 const Container = styled.div`
   width: 100%;
   max-width: 800px;
   padding: 2rem 0;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
 `;
+
+const SearchWrapper = styled.div``;
 
 const ProductWrapper = styled.ul`
   display: flex;
@@ -42,7 +47,26 @@ const FilterButton = styled.span<{ $on: boolean }>`
 function ProductList() {
   const [sorted, setSorted] = useState<any>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("DEFAULT");
+  const [inputText, setInputText] = useState<string>("");
+  const onInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputText(e.target.value);
+    searchDebounce(inputText);
+  };
+  const searchDebounce = useCallback(
+    debounce(async (inputText: string) => {
+      const res = await getSearch(inputText);
+      setSorted([...res]);
+    }, 200),
+    [inputText]
+  );
   let { data, isLoading } = useQuery<any>("products", getProductList, { onSuccess: (res) => setSorted(res) });
+
+  const getSearch = (word: string) => {
+    return new Promise<any[]>((resolve, reject) => {
+      const filtered = sorted.filter((item: any) => item.title.includes(word));
+      resolve(filtered);
+    });
+  };
 
   const onClickFilter = (TYPE: string) => {
     setCurrentFilter(TYPE);
@@ -73,6 +97,9 @@ function ProductList() {
 
   return (
     <Container>
+      <SearchWrapper>
+        <input type="text" value={inputText} onInput={onInput} />
+      </SearchWrapper>
       <FileterWrapper>
         <FilterButton
           $on={currentFilter === "DEFAULT"}
