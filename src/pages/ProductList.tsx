@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import styled from "styled-components";
 import ProductItem from "../components/ProductItem";
 import { debounce } from "lodash";
+import { Product, SortType } from "../types/product";
 
 const Container = styled.div`
   width: 100%;
@@ -45,8 +46,8 @@ const FilterButton = styled.span<{ $on: boolean }>`
 `;
 
 function ProductList() {
-  const [sorted, setSorted] = useState<any>([]);
-  const [currentFilter, setCurrentFilter] = useState<string>("DEFAULT");
+  const [sorted, setSorted] = useState<Product[]>([]);
+  const [currentFilter, setCurrentFilter] = useState<SortType>(SortType.DEFAULT);
   const [inputText, setInputText] = useState<string>("");
   const onInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputText(e.target.value);
@@ -59,32 +60,34 @@ function ProductList() {
     }, 200),
     [inputText]
   );
-  let { data, isLoading } = useQuery<any>("products", getProductList, { onSuccess: (res) => setSorted(res) });
+  let { data, isLoading } = useQuery<any>("products", getProductList, {
+    onSuccess: (res: Product[]) => setSorted(res),
+  });
 
   const getSearch = (word: string) => {
-    return new Promise<any[]>((resolve, reject) => {
-      const filtered = sorted.filter((item: any) => item.title.includes(word));
+    return new Promise<Product[]>((resolve, reject) => {
+      const filtered = sorted.filter((item: Product) => item.title.includes(word));
       resolve(filtered);
     });
   };
 
-  const onClickFilter = (TYPE: string) => {
+  const onClickFilter = (TYPE: SortType) => {
     setCurrentFilter(TYPE);
-    const res = data.sort((a: any, b: any) => {
+    const res = data.sort((a: Product, b: Product) => {
       switch (TYPE) {
-        case "DEFAULT": {
+        case SortType.DEFAULT: {
           return a.id - b.id;
         }
-        case "LOW_PRICE": {
+        case SortType.LOW_PRICE: {
           return a.price - b.price;
         }
-        case "HIGH_PRICE": {
+        case SortType.HIGH_PRICE: {
           return b.price - a.price;
         }
-        case "HIGH_RATING": {
+        case SortType.HIGH_RATING: {
           return b.rating.rate - a.rating.rate;
         }
-        case "MANY_REVIEWS": {
+        case SortType.MANY_REIVEWS: {
           return b.rating.count - a.rating.count;
         }
         default: {
@@ -102,41 +105,41 @@ function ProductList() {
       </SearchWrapper>
       <FileterWrapper>
         <FilterButton
-          $on={currentFilter === "DEFAULT"}
+          $on={currentFilter === SortType.DEFAULT}
           onClick={() => {
-            onClickFilter("DEFAULT");
+            onClickFilter(SortType.DEFAULT);
           }}
         >
           Default
         </FilterButton>
         <FilterButton
-          $on={currentFilter === "LOW_PRICE"}
+          $on={currentFilter === SortType.LOW_PRICE}
           onClick={() => {
-            onClickFilter("LOW_PRICE");
+            onClickFilter(SortType.LOW_PRICE);
           }}
         >
           LowPrice
         </FilterButton>
         <FilterButton
-          $on={currentFilter === "HIGH_PRICE"}
+          $on={currentFilter === SortType.HIGH_PRICE}
           onClick={() => {
-            onClickFilter("HIGH_PRICE");
+            onClickFilter(SortType.HIGH_PRICE);
           }}
         >
           HightPrice
         </FilterButton>
         <FilterButton
-          $on={currentFilter === "HIGH_RATING"}
+          $on={currentFilter === SortType.HIGH_RATING}
           onClick={() => {
-            onClickFilter("HIGH_RATING");
+            onClickFilter(SortType.HIGH_RATING);
           }}
         >
           HighRating
         </FilterButton>
         <FilterButton
-          $on={currentFilter === "MANY_REVIEWS"}
+          $on={currentFilter === SortType.MANY_REIVEWS}
           onClick={() => {
-            onClickFilter("MANY_REVIEWS");
+            onClickFilter(SortType.MANY_REIVEWS);
           }}
         >
           ManyReviews
@@ -147,7 +150,7 @@ function ProductList() {
         {isLoading ? (
           <span>Loading...</span>
         ) : (
-          sorted.map((product: any) => <ProductItem key={product.id} product={product} />)
+          sorted.map((product: Product) => <ProductItem key={product.id} product={product} />)
         )}
       </ProductWrapper>
     </Container>

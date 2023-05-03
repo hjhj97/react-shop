@@ -5,6 +5,7 @@ import { getProductDetail } from "../api/product";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { cartState } from "../state/atoms";
+import { Product } from "../types/product";
 
 const ProductContainer = styled.div`
   display: flex;
@@ -95,13 +96,15 @@ const Button = styled.button`
 `;
 
 function ProductDetail() {
-  const { product_id } = useParams();
-  const [cart, setCart] = useRecoilState(cartState);
-  const { data: productDetail, isLoading } = useQuery<any>(["detail", product_id], () => getProductDetail(product_id));
+  const { product_id } = useParams<string>();
+  const [cart, setCart] = useRecoilState<Product[]>(cartState);
+  const { isLoading, data: productDetail } = useQuery<Product>(["detail", product_id], () =>
+    getProductDetail(product_id)
+  );
   const [amount, setAmount] = useState(1);
 
   const getTotalPrice = () => {
-    return amount * productDetail?.price || 1;
+    return amount * (productDetail?.price || 1);
   };
 
   const onClickCart = () => {
@@ -121,7 +124,7 @@ function ProductDetail() {
         <ProductContainer>
           <ProductDetailWrapper>
             <ImageWrapper>
-              <ProductImage src={productDetail.image} />
+              <ProductImage src={productDetail?.image} />
             </ImageWrapper>
             <ProductInfoWrapper>
               <ProductTitle>

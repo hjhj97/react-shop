@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { Product } from "../types/product";
 
 const ProductItemWrapper = styled(Link)`
   display: flex;
@@ -35,9 +36,13 @@ const ProductImage = styled.img`
   object-fit: contain;
 `;
 
+interface ProductProps {
+  product: Product;
+}
+
 const ProductSummaryWrapper = styled.div``;
 
-function ProductItem({ product }: any) {
+function ProductItem({ product }: ProductProps) {
   return (
     <ProductItemWrapper to={`/product/${product.id}`}>
       <ProductImageWrapper>

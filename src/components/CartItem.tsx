@@ -2,6 +2,7 @@ import React from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { cartState } from "../state/atoms";
+import { Product } from "../types/product";
 
 const CartItemWrapper = styled.div`
   display: flex;
@@ -46,10 +47,10 @@ const Item = styled.span`
 `;
 
 function CartItem({ product, onChangeAmount }: any) {
-  const [cart, setCart] = useRecoilState(cartState);
+  const [cart, setCart] = useRecoilState<Product[]>(cartState);
 
   const onClickDelete = () => {
-    setCart(cart.filter((item: any) => item.id !== product.id));
+    setCart(cart.filter((item: Product) => item.id !== product.id));
   };
 
   return (

@@ -2,14 +2,14 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { cartState, getTotalCartPrice } from "../state/atoms";
 import CartItem from "../components/CartItem";
 import styled from "styled-components";
-import { useMemo, useState } from "react";
+import { Product } from "../types/product";
 
 const Container = styled.div`
   width: 100%;
   max-width: 800px;
   padding: 2rem 0;
   margin: 0 auto;
-  background-color: ;
+  /*background-color: ;*/
 `;
 
 const CartContainer = styled.div`
@@ -19,13 +19,13 @@ const CartContainer = styled.div`
 `;
 
 function Cart() {
-  const [cart, setCart] = useRecoilState<any>(cartState);
+  const [cart, setCart] = useRecoilState<Product[]>(cartState);
   const totalPrice = useRecoilValue(getTotalCartPrice);
 
   return (
     <Container>
       <CartContainer>
-        {cart.length > 0 ? cart.map((item: any) => <CartItem key={item.id} product={item} />) : <p>No Item</p>}
+        {cart.length > 0 ? cart.map((item: Product) => <CartItem key={item.id} product={item} />) : <p>No Item</p>}
         <p>TotalPrice : ${totalPrice}</p>
       </CartContainer>
     </Container>
