@@ -4,6 +4,7 @@ import { userLogin } from "../api/user";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { tokenState } from "../state/token";
+import { userState } from "../state/user";
 
 const Container = styled.div`
   width: 100%;
@@ -26,15 +27,16 @@ const ButtonConainer = styled.div``;
 function Login() {
   const { handleSubmit, register, setValue } = useForm();
   const [token, setToken] = useRecoilState(tokenState);
+  const [user, setUser] = useRecoilState(userState);
   const navigate = useNavigate();
-  const onClickLogin = async (loginData: any) => {
-    const res: any = await userLogin(loginData).catch((fail) => {
-      if (fail.response.status === 401) {
-        alert("Login Fail");
-      }
+  const onClickLogin = async () => {
+    const res: any = await userLogin().catch((fail) => {
+      console.error(fail);
     });
     if (res) {
-      setToken(res.token);
+      console.log(res);
+      //setToken(res.token);
+      setUser(res);
       navigate("/");
     }
     setValue("username", "");
