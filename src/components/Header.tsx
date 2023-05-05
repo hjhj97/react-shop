@@ -1,5 +1,6 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, useLocation, useMatch } from "react-router-dom";
+import router from "../router";
 import styled from "styled-components";
 
 const NavWrapper = styled.nav<{ bgColor: string }>`
@@ -11,32 +12,34 @@ const activestyle = {
   fontWeight: "bold",
 };
 
+const matched = {
+  fontWeight: "bold",
+};
+
 function Header() {
+  const { pathname: currentPath } = useLocation();
+  const isMatch = (path: string) => {
+    if (currentPath === path) {
+      return matched;
+    }
+  };
   return (
     <NavWrapper bgColor="skyblue">
-      <NavLink
-        to="/"
-        style={({ isActive, isPending }) => {
-          return {
-            fontWeight: isActive ? "bold" : "normal",
-          };
-        }}
-      >
+      <Link to="/" style={isMatch("/")}>
         Home
-      </NavLink>
-      <NavLink
-        to="/about"
-        style={({ isActive, isPending }) => {
-          return {
-            fontWeight: isActive ? "bold" : "normal",
-          };
-        }}
-      >
+      </Link>
+      <Link to="/about" style={isMatch("/about")}>
         About
-      </NavLink>
-      <Link to="/product_list">List</Link>
-      <Link to="/cart">Cart</Link>
-      <Link to="/login">Login</Link>
+      </Link>
+      <Link to="/product_list" style={isMatch("/product_list")}>
+        List
+      </Link>
+      <Link to="/cart" style={isMatch("/cart")}>
+        Cart
+      </Link>
+      <Link to="/login" style={isMatch("/login")}>
+        Login
+      </Link>
     </NavWrapper>
   );
 }
